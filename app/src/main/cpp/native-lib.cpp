@@ -59,3 +59,18 @@ Java_com_wuuklabs_android_playjni_NativeUtil_testNativeCallJava(JNIEnv *env, job
     LOGD("------testCallJava");
     return EXIT_SUCCESS;
 }
+
+uint8_t *buffer = NULL;
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_wuuklabs_android_playjni_NativeUtil_testDirectBuff(JNIEnv *env, jobject thiz,
+                                                            jobject j_buffer, jint size) {
+    if (buffer == NULL) {
+        buffer = (uint8_t *) env->GetDirectBufferAddress(j_buffer);
+    }
+
+    memset(buffer, 8, static_cast<size_t>(size));
+    callback(env, thiz);
+    return EXIT_SUCCESS;
+
+}

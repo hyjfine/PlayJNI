@@ -2,6 +2,8 @@ package com.wuuklabs.android.playjni;
 
 import android.util.Log;
 
+import java.nio.ByteBuffer;
+
 public class NativeUtil {
     private static final String TAG = "NativeUtil";
     private NativeCallback callback;
@@ -15,6 +17,8 @@ public class NativeUtil {
     public native byte[] testByteArray(byte[] data);
 
     public native int testNativeCallJava(String data);
+
+    public native int testDirectBuff(ByteBuffer buffer , int size);
 
     public int callBack(String data) {
         Log.d(TAG, "-------callBack " + data);

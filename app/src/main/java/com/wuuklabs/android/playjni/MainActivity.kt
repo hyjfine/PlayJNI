@@ -1,15 +1,18 @@
 package com.wuuklabs.android.playjni
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import java.nio.ByteBuffer
 
 class MainActivity : AppCompatActivity() {
     private val nativeUtil = NativeUtil()
     private var textView: TextView? = null
+    private var buffer: ByteBuffer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         setupListener()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setupListener() {
         findViewById<Button>(R.id.testString).setOnClickListener {
             val string = nativeUtil.testString("from java")
@@ -38,8 +42,19 @@ class MainActivity : AppCompatActivity() {
             }
             val ret = nativeUtil.testNativeCallJava("from java")
             Log.d(TAG, "-----callback $ret")
-
         }
+        findViewById<Button>(R.id.testDirectBuff).setOnClickListener {
+            buffer = ByteBuffer.allocateDirect(8)
+            nativeUtil.setCallback { data ->
+                buffer?.let {
+                    val dataArray = it.array().joinToString()
+                    textView?.text = "$data$dataArray"
+                }
+            }
+            val ret = nativeUtil.testDirectBuff(buffer, buffer!!.capacity())
+            Log.d(TAG, "-----callback $ret buffcap ${buffer?.capacity()}")
+        }
+
     }
 
     /**

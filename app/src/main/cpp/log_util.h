@@ -18,3 +18,11 @@
 #endif
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 #endif //WUUK_FFMPEG_LOG_UTIL_H
+
+char *concatString(char *a, char *b) {
+    char *newString = (char *) malloc(sizeof(a) + sizeof(b) + 1);
+    strcpy(newString, a);
+    strcat(newString, b);
+    LOGD("------concatString a %s b %s new %s", a, b, newString);
+    return newString;
+}

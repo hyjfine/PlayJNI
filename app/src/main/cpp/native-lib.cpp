@@ -2,13 +2,17 @@
 #include <string>
 #include "log_util.h"
 
-
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_wuuklabs_android_playjni_NativeUtil_testString(JNIEnv *env, jobject thiz, jstring data) {
     const char *inData = env->GetStringUTFChars(data, 0);
     LOGD("-----testString %s", inData);
     const char *outData = "hi from native";
+    char *stringA = const_cast<char *>("hello");
+    char *stringB = const_cast<char *>("world");
+    char *newString = concatString(stringA, stringB);
+    LOGD("-----testString new String %s", newString);
+    free(newString);
     return env->NewStringUTF(outData);
 }
 
@@ -21,8 +25,8 @@ Java_com_wuuklabs_android_playjni_NativeUtil_testByteArray(JNIEnv *env, jobject 
     jbyte *buf = (jbyte *) malloc(static_cast<size_t>(size));
     memset(buf, 0, static_cast<size_t>(size));
     env->GetByteArrayRegion(data, 0, size, buf);
-    free(buf); // 有malloc就要记得free
     LOGD("------testByteArray size %d data[0] %d", size, buf[0]);
+    free(buf); // 有malloc就要记得free
 
     size_t sizeReturn = 8;
     int8_t *bufRet = static_cast<int8_t *>(malloc(sizeReturn));
